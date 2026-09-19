@@ -425,25 +425,12 @@ final class BaseTDDStorage: TDDStorage, Injectable {
     /// - Returns: `true` if sufficient TDD data is available, otherwise `false`.
     /// - Throws: An error if the Core Data count operation fails.
     func hasSufficientTDD() async throws -> Bool {
-        let context = makeContext()
-        context.name = "hasSufficientTDD"
-        return try await BaseTDDStorage.hasSufficientTDD(context: context)
+        return true // eliminate constraints based on historical TDD data
     }
 
     /// internal function with context exposed to enable testing
     static func hasSufficientTDD(context: NSManagedObjectContext) async throws -> Bool {
-        try await context.perform {
-            let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "TDDStored")
-            fetchRequest.predicate = NSPredicate(
-                format: "date > %@ AND total > 0",
-                Date().addingTimeInterval(-86400 * 7) as NSDate
-            )
-            fetchRequest.resultType = .countResultType
-
-            let count = try context.count(for: fetchRequest)
-            let threshold = Int(Double(7 * 288) * 0.75)
-            return count >= threshold
-        }
+        return true // eliminate constraints based on historical TDD data
     }
 }
 
